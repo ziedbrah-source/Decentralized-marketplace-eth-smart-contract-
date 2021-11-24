@@ -31,6 +31,10 @@ contract Marketplace{
     constructor() public{
         name="Zieds marketplace";
     }
+    function getProducts(uint i)public returns(uint,  string memory, uint, address,bool){
+         require(i>=1 && i<=productCount,'invalid product');
+         return (products[i].id,products[i].name,products[i].price,products[i].owner,products[i].purchased);
+    }
 
     function createProduct(string memory _name,uint _price)public{ // memory just tells solidity to make an exact space to the variable at runtime.
         require(bytes(_name).length>0,'The name must be not empty');

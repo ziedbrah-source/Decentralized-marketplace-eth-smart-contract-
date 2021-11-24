@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Marketplace from "../abis/Marketplace.json";
 
 class Navbar extends Component {
   render() {

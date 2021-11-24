@@ -46,6 +46,14 @@ class Main extends Component {
         </form>
         <p>&nbsp;</p>
         <h2>Buy Product</h2>
+        {this.props.products.map((product) => {
+          console.log(product[0].toString());
+          console.log(product[1].toString()); //Rolex
+          console.log(product[2].toString()); //eth in gwei
+          console.log(product[3]);
+          console.log(product[4]);
+          return 1;
+        })}
         <table className="table">
           <thead>
             <tr>
@@ -56,34 +64,34 @@ class Main extends Component {
               <th scope="col"></th>
             </tr>
           </thead>
+
           <tbody id="productList">
-            <tr>
-              <th scope="row">1</th>
-              <td>iPhone x</td>
-              <td>1 Eth</td>
-              <td>0x39C7BC5496f4eaaa1fF75d88E079C22f0519E7b9</td>
-              <td>
-                <button className="buyButton">Buy</button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Macbook Pro</td>
-              <td>3 eth</td>
-              <td>0x39C7BC5496f4eaaa1fF75d88E079C22f0519E7b9</td>
-              <td>
-                <button className="buyButton">Buy</button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Airpods</td>
-              <td>0.5 eth</td>
-              <td>0x39C7BC5496f4eaaa1fF75d88E079C22f0519E7b9</td>
-              <td>
-                <button className="buyButton">Buy</button>
-              </td>
-            </tr>
+            {this.props.products.map((product) => (
+              <tr>
+                <th scope="row">{product[0].toString()}</th>
+                <td></td>
+                <td>
+                  {window.web3.utils.fromWei(product[2].toString(), "Ether")}
+                </td>
+                <td>{product[3]}</td>
+                <td>
+                  {!product[4] ? (
+                    <button
+                      name={product[0].toString()}
+                      value={product[2].toString()}
+                      onClick={(event) => {
+                        this.props.purchaseProduct(
+                          event.target.name, // the name is the id
+                          event.target.value
+                        );
+                      }}
+                    >
+                      Buy
+                    </button>
+                  ) : null}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

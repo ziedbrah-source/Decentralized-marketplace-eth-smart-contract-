@@ -39,7 +39,14 @@ class App extends Component {
       );
       this.setState({ marketplace });
       const productCount = await marketplace.methods.productCount().call();
-      console.log(productCount.toString());
+      this.setState({ productCount: productCount.toNumber() });
+      for (var i = 1; i <= productCount.toNumber(); i++) {
+        const product = await marketplace.methods.getProducts(i).call();
+        // console.log("saleeee", id, name, price, owner, purchased);
+        this.setState({
+          products: [...this.state.products, product],
+        });
+      }
       this.setState({ loading: false });
     } else {
       window.alert("Marketplace contract not deployed to detected network.");
@@ -56,6 +63,7 @@ class App extends Component {
     };
 
     this.createProduct = this.createProduct.bind(this);
+    this.purchaseProduct = this.purchaseProduct.bind(this);
   }
 
   createProduct(name, price) {
@@ -65,6 +73,17 @@ class App extends Component {
       .send({ from: this.state.account })
       .once("receipt", (receipt) => {
         this.setState({ loading: false });
+      });
+  }
+
+  purchaseProduct(id, value) {
+    this.setState({ loading: true });
+    this.state.marketplace.methods
+      .purchaseProduct(id)
+      .send({ from: this.state.account, value: value })
+      .once("receipt", (receipt) => {
+        this.setState({ loading: false });
+        window.alert(`Congratz You purchased the item number ${id}`);
       });
   }
 
@@ -80,7 +99,11 @@ class App extends Component {
                   <p className="text-center">Loading...</p>
                 </div>
               ) : (
-                <Main createProduct={this.createProduct} />
+                <Main
+                  createProduct={this.createProduct}
+                  products={this.state.products}
+                  purchaseProduct={this.purchaseProduct}
+                />
               )}
             </main>
           </div>
